@@ -1,0 +1,159 @@
+---
+title: "Lab1"
+author: "Aksel Can Sozudogru"
+date: "2024-06-10"
+output: 
+  html_document: 
+    toc: yes
+    toc_float: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# Tasks
+
+## Task 1
+```{r}
+getwd()
+```
+## Task 2
+```{r}
+ddt <- read.csv("DDT-1.csv")
+head(ddt)
+```
+## Task 3
+
+```{r}
+# In order to find qualitative variables, we need focus on our categorical dimensions which are type <chr> character in this data set. Creating a sub data frame that only includes character will result in a new data set with out qualitative variables, which are RIVER and SPECIES
+
+library(dplyr)
+qualitative_ddt <- ddt %>%
+  select(where(is.character))
+qualitative_ddt
+```
+```{r}
+# In order to find quantitative variables, we need focus on our numerical dimensions which are type <int> and <dbl> in this data set. Creating a sub data frame that only includes integers and doubles will result in a new data set with out quantitative variables, which are MILE, LENGTH, WEIGHT AND DDT
+
+
+quant_ddt <- ddt %>%
+  select(where(is.numeric))
+quant_ddt
+```
+
+```{r}
+# How many SPECIES are there?
+length(unique(ddt$SPECIES))
+
+```
+
+```{r}
+# Subset: LMBASS + WEIGHT > 800
+
+ddt[ddt$SPECIES == "LMBASS" & ddt$WEIGHT > 800,]
+```
+
+```{r}
+# Subset: LMBASS + WEIGHT > 800
+
+ddt[ddt$RIVER == "SCM" & ddt$DDT > 4.0,]
+```
+## Clicker Questions
+
+```{r}
+# Mean length of fish
+
+mean(ddt$LENGTH)
+```
+```{r}
+# Standard deviation of the weight
+
+sd(ddt$WEIGHT)
+```
+
+```{r}
+# Yes, this is the correct plot
+# Ans: 1
+plot(ddt$LENGTH, ddt$WEIGHT)
+
+```
+
+```{r}
+# 20/20. Hence, 1
+v = 1:20
+v/20
+
+```
+## Task 4
+```{r}
+riv <- ddt$RIVER
+# Tables
+tab <- table(riv)
+tab
+tab2 <- table(ddt$RIVER, ddt$SPECIES)
+tab2
+# Bar plots
+barplot(tab, col = rainbow(4))
+barplot(tab2, col = rainbow(4))
+
+
+```
+
+## Task 5
+
+```{r}
+# Pie Charts
+spec <- table(ddt$SPECIES)
+pie(spec)
+pie(table(ddt$RIVER))
+```
+
+
+## Task 6
+
+
+```{r}
+#Box Plots
+boxplot(ddt$DDT)
+boxplot(ddt$WEIGHT)
+boxplot(ddt$LENGTH)
+
+```
+
+
+## Task 7
+
+
+```{r}
+# Coplot 1
+
+weight <- (ddt$WEIGHT)
+lenght <- (ddt$LENGTH)
+coplot(weight ~ lenght | riv)
+```
+```{r}
+# Coplot 2
+
+weight <- (ddt$WEIGHT)
+species <- ddt$SPECIES
+pollutant_DDT <- ddt$DDT
+coplot(pollutant_DDT ~ weight | species)
+```
+
+
+## Task 8
+
+
+```{r}
+  library(ggplot2)
+
+ggplot(ddt, aes(x = SPECIES, y = WEIGHT, fill = RIVER)) + geom_boxplot() + labs(title = "Aksel Can Sozudogru", x = "SPECIES", y = "WEIGHT")
+```
+
+```{r}
+ggplot(ddt, aes(x = RIVER, y = LENGTH, fill = SPECIES)) + geom_violin() + labs(title = "Aksel Can Sozudogru", x = "RIVER", y = "LENGTH")
+```
+
+
