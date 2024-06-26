@@ -1,0 +1,112 @@
+---
+title: "Lab2"
+author: "Aksel Can Sozudogru"
+date: "2024-06-11"
+output: 
+  html_document:
+    toc: yes
+    toc_float: yes
+    
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# Tasks
+
+## Task 1
+
+```{r}
+getwd()
+```
+## Task 2
+
+```{r}
+epagas <- read.csv("EPAGAS-1.csv")
+head(epagas)
+```
+
+## Task 3
+
+```{r}
+mpg <- epagas$MPG
+mpg
+
+```
+
+
+```{r}
+z <- (mpg - mean(mpg))/sd(mpg)
+round(mean(z), 6)
+round(sd(z), 6)
+```
+
+```{r}
+# Finding possible outliers
+
+poss_out <- epagas[abs(z)>=2 & abs(z)<=3,]
+poss_out
+```
+
+
+```{r}
+#Finding defined outliers
+outliers <- epagas[abs(z) > 3,]
+outliers
+```
+```{r}
+# Dotplot 
+library(lattice)
+mycol = ifelse(abs(z)>3, "Red",
+        ifelse(abs(z)>=2 &abs(z)<=3,"Blue", "Black"))  
+mycol
+dotplot(mpg,col=mycol)
+
+```
+
+## Task 4
+
+```{r}
+library(lattice)
+
+# Box plot
+bwplot(~ MPG, 
+       data = epagas,
+       notch = TRUE,
+       col = "black",
+       horizontal = TRUE,
+       main = "My pretty boxplot!")
+```
+
+```{r}
+# Using Chebyshev's theorem to predict the proportion of data within 2 SD of mean
+#At least 3/4
+
+1-1/4
+
+```
+
+
+```{r}
+# Exact proportion
+
+length(mpg[abs(z)<2])/length(mpg)
+
+# Does Chebyshev agree with the data?
+# No, our results do not agree with the Chebyshev theorem as 2 standard deviations away from the mean should cover around 95 percent of the data.
+```
+
+```{r}
+# According to the Empirical rule, around 95 percent of our data should be covered being 2 standard deviations (2.41) away from our mean (36.9). 
+
+# Which it corresponds way better than the Chebyshev model.
+
+# Why? Well a quick check with hist(mpg) shows us that we have a pretty Gaussian/normal distrubition when it comes to our data points, which is one of the requirements for the empricial rule to be valid, which is in this case.
+
+hist(mpg)
+
+```
+
+
