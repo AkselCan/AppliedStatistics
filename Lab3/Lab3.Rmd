@@ -1,0 +1,164 @@
+---
+title: "Lab3"
+author: "Aksel Can Sozudogru"
+date: "2024-06-18"
+output: 
+  html_document:
+    toc: yes
+    toc_float: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## Task 1
+
+```{r}
+getwd()
+```
+
+## Task 2
+
+```{r}
+mybin=function(iter=100,n=10, p=0.5) { 
+  sam.mat=matrix(NA,nr=n,nc=iter, byrow=TRUE)
+  succ=c()
+  for( i in 1:iter) {
+    sam.mat[,i]=sample(c(1,0),n,replace=TRUE, prob=c(p,1-p))
+    succ[i]=sum(sam.mat[,i])
+  }
+succ.tab=table(factor(succ,levels=0:n))
+barplot(succ.tab/(iter), col=rainbow(n+1), main="Binomial simulation", xlab="Number of successes")
+succ.tab/iter
+}
+# 100 iterations
+mybin(iter = 100, n = 10, p = 0.7)
+```
+```{r}
+# 200 iteration
+mybin(iter = 200, n = 10, p = 0.7)
+```
+
+```{r}
+# 500 iteration
+mybin(iter = 500, n = 10, p = 0.7)
+```
+
+
+```{r}
+# 1000 iteration
+mybin(iter = 1000, n = 10, p = 0.7)
+```
+
+```{r}
+# 10000 iteration
+mybin(iter = 10000, n = 10, p = 0.7)
+```
+```{r}
+bintab = round(dbinom(0:10, 10, 0.7), 4)
+names(bintab) = 0:10
+bintab
+# The results in this table verify that it is approximately correct
+```
+
+
+
+
+## Task 3
+
+```{r}
+# Without replacement 
+sample(c(1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0), size = 5, replace = FALSE)
+```
+```{r}
+# With replacement 
+sample(c(1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0), size = 5, replace = TRUE)
+
+```
+
+```{r}
+myhyper=function(iter=100,N=20,r=12,n=5) {
+  sam.mat=matrix(NA,nr=n,nc=iter, byrow=TRUE)
+  succ=c()
+  for( i in 1:iter) {
+    sam.mat[,i]=sample(rep(c(1,0),c(r,N-r)),n,replace=FALSE)
+    succ[i]=sum(sam.mat[,i])
+  }
+  succ.tab=table(factor(succ,levels=0:n))
+  barplot(succ.tab/(iter), col=rainbow(n+1), main="HYPERGEOMETRIC simulation", xlab="Number of successes")
+  succ.tab/iter
+}
+myhyper(iter = 100, n = 5, N = 20, r = 12)
+
+```
+
+```{r}
+myhyper(iter = 200, n = 5, N = 20, r = 12)
+
+```
+
+```{r}
+myhyper(iter = 500, n = 5, N = 20, r = 12)
+
+```
+
+```{r}
+myhyper(iter = 1000, n = 5, N = 20, r = 12)
+
+```
+
+
+```{r}
+myhyper(iter = 1000, n = 5, N = 20, r = 12)
+
+```
+
+```{r}
+dhyper(x=0:20, m=12, n=8, k=20)
+```
+
+
+
+
+## Task 4
+
+```{r}
+
+mysample=function(n, iter=10,time=0.5) {
+  for( i in 1:iter) {
+    s=sample(1:10,n,replace=TRUE)
+    sf=factor(s,levels=1:10)
+    barplot(table(sf)/n,beside=TRUE,col=rainbow(10), 
+    main=paste("Example sample()", " iteration ", i, " n= ", n,sep=""), ylim=c(0,0.2))
+    Sys.sleep(time)
+  }
+}
+# mysample(n = 1000, iter = 30, time = 1)
+
+mysample(n = 1000, iter = 1, time = 1)
+
+# My sample is function in R that visualizes a sampling process that allows replacements with barplots. It also includes the "time" argument, giving a contstraint to the execution time of iterations that the functions go through
+```
+
+
+
+
+## Task 5
+
+```{r}
+choose (8, 4)
+```
+
+```{r}
+1 - ppois(q = 5, lambda = 2)
+```
+
+```{r}
+dnbinom(x = 10-3, size = 3, prob = 0.4)
+```
+```{r}
+pbinom(8, 15, 0.4)
+```
+
