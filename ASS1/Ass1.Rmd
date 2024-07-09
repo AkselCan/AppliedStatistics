@@ -1,0 +1,578 @@
+---
+title: "Ass1"
+author: "Aksel Can Sozudogru"
+date: "2024-06-14"
+output: 
+  html_document:
+    toc: yes
+    toc_float: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Assignment 1
+
+## 14/15 questions answered (Q14 missing)
+
+## Part 1: Grading
+
+
+```{r}
+# ISE-3293-200 Grading Distrubution
+#
+# 1) 4 Assignments, all equal valued (Total of 20%)
+# 2) Laboratories (Total of 10%)
+#   a. Possibly 12 Lab/minilab reports
+#   b. Additional class room exercises
+#   c. Grades allotted through drop-boxes and Rubrics
+# 3) In class Quizzes 10% No clickers
+# 4) Chapter online CANVAS quizzes 10%
+# 5) Project: Each semester a new project is made – often a function that solves a statistical problem 10%
+# 6) Mid -Term Exam (Total 10%)
+# 7) Final 30%
+#
+#8. Grades: A (90s) 
+#           B(80s)
+#           C(60s and 70s)
+#           D(50s)
+#           F(<50) – NO curving!
+```
+
+
+## Part 2: Tennessee River Dateset
+
+
+```{r}
+ddt <- read.csv("DDT-2.csv")
+head(ddt)
+```
+### a
+
+```{r}
+library(lattice)
+
+# Create the coplot
+coplot(WEIGHT ~ LENGTH | RIVER * SPECIES, data = ddt, xlab = "LENGTH", ylab = "WEIGHT", col = ddt$MILE)
+
+```
+
+### b
+
+```{r}
+# The lower three plots correspond with CCATFISH species as we can from the very right legend. Our x axis is the length of the fish, and the y axis is the weight of the fish the data is collected from. Thus, The bottom left three plots are the weight and length plotted of the species CCATFISH. However, from the very top we can see the RIVER constraint. Hence, these are three different plots according to their corresponding river, which is FCM, LCM, adn SCM in left to right order.
+```
+
+
+### c
+
+```{r}
+#  It factors the MILE dimension of our ddt dataset as a numerical value, and assigns it to the m vector.
+```
+
+### d
+
+```{r}
+# It takes unique values that are in the m vector, and finds its length. In other words, returns the amount of unique member in m.
+```
+
+### e 
+
+```{r}
+# They are empty because there is no data for LMBASS and SMBUFFALO species in FCM, LCM, and SCM rivers
+```
+
+
+### f
+
+```{r}
+mean(ddt[ddt$SPECIES == "CCATFISH" & ddt$RIVER == "FCM",] $DDT)
+```
+
+
+## Part 3: 1.14 from the book
+
+```{r}
+# a = quantitative
+# b = qantitative
+# c = qualitative
+# d = quantitative (if a numerical value)
+# e = qualitative
+# f = quantitative
+# g = qualitative
+```
+
+
+## Part 4: Random Sampling
+
+
+### a
+```{r}
+# Simple random, stratified random, cluster, and systematic sampling
+```
+
+
+
+### b
+
+```{r}
+# Simple Random: Every member of the group has the same chance.
+###
+# Stratified Random: The dataset is divided into groups by sorting them into similarities. After the grouping, there is a sample group (strata) selected from every group to have a complete sample set where every group is represented.
+###
+# Cluster Sampling: Is the random process of choosing a subset from a larger sample to cluster and analyze.
+###
+# Systematic Sampling: Is the process of creating a sample with certain intervals, such as picking a member every 3 members.
+
+```
+
+
+## Part 5: 1.15 from the book
+
+### a.i.
+```{r}
+mtbe <- read.csv("MTBE.csv")
+ind = sample(1:223,5,replace = FALSE)
+mtbe[ind,]
+```
+
+
+### a.ii.
+
+```{r}
+mtbeo = na.omit(mtbe)
+sd(mtbeo[mtbeo$Aquifier == "Bedrock",] $Depth)
+```
+
+
+
+## Part 6: 1.16 from the book
+
+```{r}
+eq <- read.csv("EARTHQUAKE.csv")
+samp = sample(1:2929,30,replace = FALSE)
+eq[samp, ]
+```
+
+### a.i.
+
+```{r}
+plot(ts(eq$MAGNITUDE))
+```
+
+### a.ii.
+
+```{r}
+median(eq$MAGNITUDE)
+```
+
+
+## Part 7
+
+### a
+
+```{r}
+# Data collection method is a designed experiment involving a stratified sample, which in the context of the Tennessee River dataset it is the locations/rivers.
+```
+
+
+### b
+
+```{r}
+# Population according to page 18, is all the fish in the Tennessee Ribe and its tributaries.
+```
+
+### c
+
+```{r}
+# Qualitative variables: Species and Location
+```
+
+## Part 8: 2.1 from the book
+
+
+
+
+
+### a
+
+```{r}
+# Bar graph
+```
+
+
+
+
+### b
+
+```{r}
+# Types of robotic limbs
+```
+
+
+
+
+### c
+
+```{r}
+# Legs ONLY
+```
+
+
+
+
+
+### d
+
+```{r}
+
+freq <- c(None = 15, Both = 8, Legs_ONLY = 63, Wheels_ONLY = 20)
+
+total <- sum(freq)
+
+rel_freq <- freq / total
+
+print(rel_freq)
+
+```
+
+
+
+### e
+
+```{r}
+# install.packages("qcc")
+library(qcc)
+pareto.chart(freq, main = "Pareto Diagram")
+```
+
+
+
+
+
+### Part 9: 2.4 from the book
+
+## a
+
+```{r}
+mc_prod <- c(Windows = 32, Explorer = 6, Office = 12)
+pie(mc_prod)
+
+# Lowest amount is Explorer which can also bee seen from the chart
+```
+
+
+
+## b
+
+```{r}
+
+# As we can see right underneath this comment, the most frequent issue is remote code execution, which in my opinion would be a good starting point
+
+iss <- c(Denial_of_Service = 6, Info_Disclosure = 8, Remote_Code_Execution = 22, Spoofing = 3, Privilege_Elevation = 11)
+
+
+pareto <- function(x, mn = "Pareto barplot", ...) {  # x is a vector
+  x.tab = table(x)
+  xx.tab = sort(x.tab, decreasing = TRUE, index.return = FALSE)
+  cumsum(as.vector(xx.tab)) -> cs
+  length(x.tab) -> lenx
+  bp <- barplot(xx.tab, ylim = c(0,max(cs)),las = 2)
+  lb <- seq(0,cs[lenx], l = 11)
+  axis(side = 4, at = lb, labels = paste(seq(0, 100, length = 11), "%", sep = ""), las = 1, line = -1, col = "Blue", col.axis = "Red")
+  for(i in 1:(lenx-1)){
+    segments(bp[i], cs[i], bp[i+1], cs[i+1], col = i, lwd = 2)
+  }
+  title(main = mn, ...)
+}
+
+pareto(iss)
+```
+
+
+## Part 10: 2.10 part of the book
+
+```{r}
+# install.packages("plotrix")
+swd <- read.csv("SWDEFECTS.csv")
+head(swd)
+library(plotrix)
+tab=table(swd$defect)
+rtab=tab/sum(tab)
+round(rtab,2)
+pie3D(rtab,labels=list("OK","Defective"),main="pie plot of SWD")
+
+```
+
+## Part 11: 2.71 from the book
+
+
+### a
+
+```{r}
+old_location = c(0,1/30,3/30,0,0,3/30,13/30,9/30,1/30) 
+names(old_location) = c("8-8.2889", "8.2889-8.5778", "8.5778-8.8667", "8.8667-9.1556", "9.1556-9.4445", "9.4445-9.7334", "9.7334-10.0223", "10.0223-10.3112", "10.3112-10.6")
+barplot(old_location)
+```
+
+
+### b
+
+```{r}
+new_location = c(9.19, 10.01, 8.82, 9.63, 8.82, 8.65, 10.10, 9.43, 8.51,9.70, 10.03, 9.14, 10.09, 9.85, 9.75, 9.60, 9.27, 8.78, 10.05, 8.83, 9.35, 10.12, 9.39, 9.54, 9.49, 9.48, 9.36, 9.37, 9.64, 8.68)
+stem(new_location)
+```
+
+### c
+
+```{r}
+voltage <- read.csv("VOLTAGE.csv")
+new<-subset(voltage,subset=LOCATION=="NEW")
+new$VOLTAGE->vtn
+vtn
+max(vtn)
+
+```
+
+```{r}
+min(vtn)
+
+```
+
+```{r}
+
+lept<-min(vtn)-0.05
+rept<-max(vtn)+0.05
+rnge<-rept-lept
+inc<-rnge/9
+inc
+
+```
+```{r}
+seq(lept, rept,by=inc)->cl
+cl
+
+```
+
+```{r}
+cvtn<-cut(vtn,breaks=cl)
+new.tab=table(cvtn)
+barplot(new.tab,space=0,main="Frequency Histogram(NEW)",las=2)
+```
+
+### d
+
+```{r}
+# I do not think so. There are as many if not more readings under 9.2 in the new.
+```
+
+
+### e
+
+```{r}
+mean(voltage[voltage$LOCATION == "OLD",]$VOLTAGE)
+```
+
+```{r}
+median(voltage[voltage$LOCATION == "OLD",]$VOLTAGE)
+
+```
+
+```{r}
+modeval <- unique(voltage[voltage$LOCATION == "OLD", ]$VOLTAGE)
+ux <- unique(voltage[voltage$LOCATION == "OLD", ]$VOLTAGE)
+modeval[which.max(tabulate(match(voltage[voltage$LOCATION == "OLD", ]$VOLTAGE, ux)))]
+
+```
+
+```{r}
+mean(voltage[voltage$LOCATION == "NEW", ]$VOLTAGE)
+```
+
+```{r}
+median(voltage[voltage$LOCATION == "NEW", ]$VOLTAGE)
+```
+
+```{r}
+modeval <- unique(voltage[voltage$LOCATION == "NEW", ]$VOLTAGE)
+ux <- unique(voltage[voltage$LOCATION == "OLD", ]$VOLTAGE)
+modeval[which.max(tabulate(match(voltage[voltage$LOCATION == "NEW", ]$VOLTAGE, ux)))]
+```
+
+
+### f
+
+```{r}
+(10.5 - mean(voltage[voltage$LOCATION == "OLD", ]$VOLTAGE))/sd(voltage[voltage$LOCATION == "OLD",]$VOLTAGE)
+```
+
+
+### g
+
+```{r}
+(10.5 - mean(voltage[voltage$LOCATION == "NEW", ]$VOLTAGE))/sd(voltage[voltage$LOCATION == "NEW",]$VOLTAGE)
+```
+
+### h
+
+```{r}
+# Since the z score is less, closer to the mean, it is more likely it wll happen at the old location
+```
+
+
+### i
+
+```{r}
+boxplot(voltage[voltage$LOCATION =="OLD",]$VOLTAGE)
+```
+
+### j
+
+```{r}
+volt <- voltage[voltage$LOCATION == "OLD",]$VOLTAGE
+z <- (volt - mean(volt)) / sd(volt)
+print(paste0("Mean: ", round(mean(z))), quote = FALSE)
+
+
+```
+
+```{r}
+print(paste0("Variance: ", var(z)), quote = FALSE)
+```
+```{r}
+print(paste0("Standard Deviation: ", sd(z)), quote = FALSE)
+```
+
+```{r}
+voltage[abs(z) > 3, ]
+```
+
+### k
+
+```{r}
+boxplot(voltage[voltage$LOCATION =="NEW",]$VOLTAGE)
+```
+
+
+
+###l
+
+```{r}
+voltN <- voltage[voltage$LOCATION == "NEW",]$VOLTAGE
+zN <- (voltN - mean(voltN)) / sd(voltN)
+print(paste0("Mean: ", round(mean(zN))), quote = FALSE)
+```
+
+```{r}
+print(paste0("Variance: ", var(zN)), quote = FALSE)
+```
+
+```{r}
+print(paste0("Standard Deviation: ", sd(zN)), quote = FALSE)
+```
+```{r}
+voltage[abs(zN) > 3, ]
+
+#N/A
+
+```
+
+
+
+
+### m
+
+```{r}
+layout(matrix(1:2, nr = 2,nc = 1, byrow = TRUE))
+boxplot(voltage[voltage$LOCATION == "OLD",]$VOLTAGE)
+boxplot(voltage[voltage$LOCATION == "NEW",]$VOLTAGE)
+```
+
+
+
+
+## Part 12: 2.73 from the book
+
+```{r}
+roughpipe = c(1.72, 2.50, 2.16, 2.13, 1.06, 2.24, 2.31, 2.03, 1.09, 1.40, 2.57, 2.64, 1.26, 2.05, 1.19, 2.13, 1.27, 1.51, 2.41, 1.95)
+
+low = mean(roughpipe) - (2 * sd(roughpipe))
+
+high = mean(roughpipe) + (2 * sd(roughpipe))
+
+low
+high
+```
+
+
+## Part 13: 2.80 from the book
+
+
+### a
+
+
+```{r}
+gobiants <- read.csv("GOBIANTS.csv")
+mean(gobiants$AntSpecies)
+
+median(gobiants$AntSpecies)
+
+calculate_mode <- function(x) {
+  uniq <- unique(x)
+  uniq[which.max(tabulate(match(x, uniq)))]
+}
+
+print(calculate_mode(gobiants$AntSpecies))
+```
+
+
+### b
+
+```{r}
+# Picking the median the best in order to eliminate the outliers
+```
+
+
+
+### c
+
+```{r}
+mean(gobiants[gobiants$Region == "Dry Steppe",]$PlantCov)
+
+median(gobiants[gobiants$Region == "Dry Steppe",]$PlantCov)
+
+calculate_mode <- function(x) {
+  uniq <- unique(x)
+  uniq[which.max(tabulate(match(x, uniq)))]
+}
+
+print(calculate_mode(gobiants[gobiants$Region == "Dry Steppe",]$PlantCov))
+```
+
+
+### d
+
+```{r}
+mean(gobiants[gobiants$Region == "Gobi Desert",]$PlantCov)
+
+median(gobiants[gobiants$Region == "Gobi Desert",]$PlantCov)
+
+calculate_mode <- function(x) {
+  uniq <- unique(x)
+  uniq[which.max(tabulate(match(x, uniq)))]
+}
+
+print(calculate_mode(gobiants[gobiants$Region == "Gobi Desert",]$PlantCov))
+```
+
+
+
+## Part 15
+
+```{r}
+library(ggplot2)
+
+ggplot(ddt, aes(x = RIVER, y = LENGTH, fill = SPECIES)) + geom_boxplot() + labs(title = "Aksel Can Sozudogru", x = "SPECIES", y = "WEIGHT")
+```
+
