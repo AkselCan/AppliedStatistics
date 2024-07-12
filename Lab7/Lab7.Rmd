@@ -1,0 +1,297 @@
+---
+title: "Lab7"
+author: "Aksel Can Sozudogru"
+date: "2024-06-30"
+output: 
+  html_document:
+    toc: yes
+    toc_float: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+## Task 1
+
+```{r}
+getwd()
+```
+
+## Task 2
+
+```{r}
+set.seed(35) 
+sam=round(rnorm(20,mean=10,sd=4),2)
+unique(sample(sam,20,replace=TRUE)) 
+```
+
+```{r}
+unique(sample(sam,20,replace=TRUE))
+```
+
+```{r}
+unique(sample(sam,20,replace=TRUE))
+```
+```{r}
+unique(sample(sam,20,replace=TRUE))
+```
+```{r}
+unique(sample(sam,20,replace=TRUE))
+```
+
+```{r}
+unique(sample(sam,20,replace=FALSE))
+```
+
+```{r}
+unique(sample(sam,20,replace=FALSE))
+```
+```{r}
+unique(sample(sam,20,replace=FALSE))
+```
+```{r}
+unique(sample(sam,20,replace=FALSE))
+```
+
+```{r}
+unique(sample(sam,20,replace=FALSE))
+```
+```{r}
+## There is no randomness, when we use replace = FALSE as we get same original data but just different order. 
+```
+
+
+
+
+## Task 3
+
+```{r}
+myboot2<-function(iter=10000,x,fun="mean",alpha=0.05,cx=1.5, xlab){  
+n=length(x)   #sample size
+
+y=sample(x,n*iter,replace=TRUE)
+rs.mat=matrix(y,nr=n,nc=iter,byrow=TRUE)
+xstat=apply(rs.mat,2,fun) # xstat is a vector and will have iter values in it 
+ci=quantile(xstat,c(alpha/2,1-alpha/2))# Nice way to form a confidence interval
+# A histogram follows
+# The object para will contain the parameters used to make the histogram
+para=hist(xstat,freq=FALSE,las=1,
+main=paste("Histogram of Bootstrap sample statistics","\n","alpha=",alpha," iter=",iter,sep=""), xlab = xlab)
+
+#mat will be a matrix that contains the data, this is done so that I can use apply()
+mat=matrix(x,nr=length(x),nc=1,byrow=TRUE)
+
+#pte is the point estimate
+#This uses whatever fun is
+pte=apply(mat,2,fun)
+abline(v=pte,lwd=3,col="Black")# Vertical line
+segments(ci[1],0,ci[2],0,lwd=4)      #Make the segment for the ci
+text(ci[1],0,paste("(",round(ci[1],2),sep=""),col="Red",cex=cx)
+text(ci[2],0,paste(round(ci[2],2),")",sep=""),col="Red",cex=cx)
+
+text(pte,max(para$density)/2,round(pte,2),cex=cx)
+
+invisible(list(ci=ci,fun=fun,x=x))
+}
+
+set.seed(39)
+sam=rnorm(25,mean=25,sd=10)
+graph = myboot2(x = sam, xlab = "mean")
+```
+```{r}
+mean(sam)
+graph$ci
+```
+```{r}
+set.seed(30)
+sam=rchisq(20,df=3)
+graph = myboot2(x = sam, xlab = "mean")
+```
+
+```{r}
+mean(sam)
+graph$ci
+```
+
+```{r}
+set.seed(40)
+sam=rgamma(30,shape=2,scale=3)
+graph = myboot2(x = sam, xlab = "mean")
+```
+
+```{r}
+mean(sam)
+graph$ci
+```
+
+```{r}
+set.seed(10)
+sam=rbeta(20,shape1=3,shape2=4)
+graph = myboot2(x = sam, xlab = "mean")
+```
+
+```{r}
+mean(sam)
+graph$ci
+```
+
+
+
+## Task 4
+
+```{r}
+myboot2<-function(iter=10000,x,fun="mean",alpha=0.05,cx=1.5, xlab){  
+n=length(x)   #sample size
+
+y=sample(x,n*iter,replace=TRUE)
+rs.mat=matrix(y,nr=n,nc=iter,byrow=TRUE)
+xstat=apply(rs.mat,2,fun) # xstat is a vector and will have iter values in it 
+ci=quantile(xstat,c(alpha/2,1-alpha/2))# Nice way to form a confidence interval
+# A histogram follows
+# The object para will contain the parameters used to make the histogram
+para=hist(xstat,freq=FALSE,las=1,
+main=paste("Histogram of Bootstrap sample statistics","\n","alpha=",alpha," iter=",iter,sep=""), xlab = xlab)
+
+#mat will be a matrix that contains the data, this is done so that I can use apply()
+mat=matrix(x,nr=length(x),nc=1,byrow=TRUE)
+
+#pte is the point estimate
+#This uses whatever fun is
+pte=apply(mat,2,fun)
+abline(v=pte,lwd=3,col="Black")# Vertical line
+segments(ci[1],0,ci[2],0,lwd=4)      #Make the segment for the ci
+text(ci[1],0,paste("(",round(ci[1],2),sep=""),col="Red",cex=cx)
+text(ci[2],0,paste(round(ci[2],2),")",sep=""),col="Red",cex=cx)
+
+# plot the point estimate 1/2 way up the density
+text(pte,max(para$density)/2,round(pte,2),cex=cx)
+
+list(ci=ci,fun=fun,x=x) 
+}
+
+
+
+sam=c(1,1,1,2,2,2,2,3,3,3,4,4)
+
+myboot2(x=sam,fun= "median", xlab = "median")
+```
+
+
+
+## Task 5
+
+```{r}
+meanMedian = function(x) {
+  mean(x)/median(x)
+}
+
+set.seed(39)
+sam=rnorm(25,mean=25,sd=10)
+myboot2(x = sam, fun = "meanMedian", xlab = "mean/median")
+```
+
+```{r}
+set.seed(30)
+sam=rchisq(20,df=3)
+myboot2(x = sam, fun = "meanMedian", xlab = "mean/median")
+```
+
+```{r}
+set.seed(40)
+sam=rgamma(30,shape=2,scale=3)
+myboot2(x = sam, fun = "meanMedian", xlab = "mean/median")
+```
+
+```{r}
+set.seed(10)
+sam=rbeta(20,shape1=3,shape2=4)
+myboot2(x = sam, fun = "meanMedian", xlab = "mean/median")
+```
+
+```{r}
+set.seed(39)
+sam=rnorm(25,mean=25,sd=10)
+myboot2(x = sam, fun = "meanMedian", xlab = "mean/median", alpha = 0.3)
+```
+
+
+```{r}
+set.seed(30)
+sam=rchisq(20,df=3)
+myboot2(x = sam, fun = "meanMedian", xlab = "mean/median", alpha = 0.3)
+```
+```{r}
+set.seed(40)
+sam=rgamma(30,shape=2,scale=3)
+myboot2(x = sam, fun = "meanMedian", xlab = "mean/median", alpha = 0.3)
+```
+
+
+```{r}
+set.seed(10)
+sam=rbeta(20,shape1=3,shape2=4)
+myboot2(x = sam, fun = "meanMedian", xlab = "mean/median", alpha = 0.3)
+```
+
+## Task 6
+
+```{r}
+sam=rcauchy(n = 20)
+myboot2(x = sam, xlab = "mean", alpha = 0.2, iter = 10000)
+```
+
+```{r}
+sam = rexp(n = 20)
+myboot2(x = sam, xlab = "mean", alpha = 0.2, iter = 10000)
+```
+
+```{r}
+sam = rpois(n = 20, lambda = 1)
+myboot2(x = sam, xlab = "mean", alpha = 0.2, iter = 10000)
+```
+
+
+```{r}
+sam = rweibull(n = 20, shape = 1)
+myboot2(x = sam, xlab = "mean", alpha = 0.2, iter = 10000)
+```
+
+## Task 7
+
+
+```{r}
+set.seed(68)
+sam=rnorm(20,mean=10,sd=4)
+graph = myboot2(x = sam, fun = "median", xlab = "median")
+```
+
+```{r}
+graph = myboot2(x = sam, fun = "sd", xlab = "standard deviation")
+```
+
+
+```{r}
+graph = myboot2(x = sam, fun = "var", xlab = "variance")
+
+```
+```{r}
+graph = myboot2(x = sam, fun = "quantile", xlab = "quantile")
+
+```
+
+```{r}
+zAlpha = 4/sqrt(20)
+range = qnorm(1-0.05/2,mean=0,sd=1)
+upper = round(10 + range*zAlpha, 5)
+lower = round(10 - range*zAlpha, 5)
+print(paste("(", lower, ", ", upper, ")", sep = ""))
+```
+
+```{r}
+sam=rnorm(20,mean=10,sd=4)
+graph = myboot2(x = sam, xlab = "mean")
+```
+
